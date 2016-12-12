@@ -20,7 +20,27 @@ def run(argv):
   workbook = xlrd.open_workbook(args.file)
   sheet = workbook.sheet_by_index(0)
   if args.action == "count":
-    print(sheet.nrows)
+    max_count_empty_rows = int(args.max_empty_rows)
+    rows_count = 0
+    empty_rows_count = 0
+    for rownum in range(1, sheet.nrows):
+      row = sheet.row_values(rownum)
+      current_row_read = []
+      for cell in row:
+        value = cell
+        if value is "":
+          continue
+        else:
+          current_row_read.append(True)
+          empty_rows_count = 0
+          break
+      if not current_row_read:
+        empty_rows_count += 1
+      else:
+        rows_count += 1
+      if max_count_empty_rows < empty_rows_count:
+        break
+    print(rows_count)
 
   elif args.action == "read":
     reached_end = False
