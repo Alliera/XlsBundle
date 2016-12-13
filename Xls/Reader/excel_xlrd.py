@@ -23,7 +23,7 @@ def run(argv):
     max_count_empty_rows = int(args.max_empty_rows)
     rows_count = 0
     empty_rows_count = 0
-    for rownum in range(1, sheet.nrows):
+    for rownum in range(sheet.nrows):
       row = sheet.row_values(rownum)
       current_row_read = []
       for cell in row:
