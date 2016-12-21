@@ -50,7 +50,7 @@ def run(argv):
         for cell in row:
             value = cell.value
             if isinstance(value, (int, long, float)):
-                current_row_read.append(str(value))
+                current_row_read.append(value)
             elif value is None:
                 current_row_read.append("")
             elif isinstance(value, (datetime.datetime)):
