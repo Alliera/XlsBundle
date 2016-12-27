@@ -3,6 +3,11 @@ import json
 import sys
 import os
 import argparse
+import datetime
+
+
+# For more information about cell types see documentation http://www.lexicon.net/sjmachin/xlrd.html#xlrd.Cell-class
+CELL_TYPE_XLDATE = 3
 
 
 def run(argv):
@@ -44,13 +49,19 @@ def run(argv):
         print(rows_count)
 
     elif args.action == "read":
-        reached_end = False
         rows = []
-        while len(rows) < int(args.size) and reached_end == False:
-            try:
-                rows.append(sheet.row_values(int(args.start) + len(rows) - 1))
-            except IndexError:
-                reached_end = True
+        num_cols = sheet.ncols
+        for row_idx in range(int(args.start) - 1, sheet.nrows):  # Iterate through rows
+            current_row_read = []
+            for col_idx in range(0, num_cols):  # Iterate through columns
+                cell_obj = sheet.cell(row_idx, col_idx)  # Get cell object by row, col
+                if cell_obj.ctype == CELL_TYPE_XLDATE:
+                    current_row_read.append(datetime.datetime(*xlrd.xldate_as_tuple(cell_obj.value, workbook.datemode)).isoformat())
+                else:
+                    current_row_read.append(cell_obj.value)
+            rows.append(current_row_read)
+            if len(rows) >= int(args.size):
+                break
         print(json.dumps(rows))
 
     else:
