@@ -54,7 +54,7 @@ def run(argv):
                 elif value is None:
                     current_row_read.append("")
                 elif isinstance(value, (datetime.datetime)):
-                    current_row_read.append(value.strftime("%m/%d/%Y"))
+                    current_row_read.append(value.isoformat())
                 elif isinstance(value, (str, unicode)):
                     current_row_read.append(value.encode('utf-8'))
                 else:
