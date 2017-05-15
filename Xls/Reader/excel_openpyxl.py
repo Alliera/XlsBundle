@@ -45,6 +45,7 @@ def run(argv):
         print(rows_count)
     elif args.action == "read":
         rows = []
+        sheet.max_row = sheet.max_column = None
         for row in sheet.iter_rows(row_offset=int(args.start) - 1):
             current_row_read = []
             for cell in row:
