@@ -50,7 +50,7 @@ def run(argv):
             current_row_read = []
             for cell in row:
                 value = cell.value
-                if isinstance(value, (datetime.datetime)):
+                if isinstance(value, (datetime.datetime, datetime.time)):
                     current_row_read.append(value.isoformat())
                 elif isinstance(value, (str, unicode)):
                     current_row_read.append(value.encode('utf-8'))
