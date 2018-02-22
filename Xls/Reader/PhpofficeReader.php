@@ -18,20 +18,20 @@ class PhpofficeReader extends ReaderAbstract implements ReaderInterface
         return $this->getExcel($path)->toArray();
     }
 
-    /** {@inheirtdoc} */
-    public function getRowsChunk($path, $startRow = 1, $size = 65000)
+    /** {@inheritdoc} */
+    public function getRowsChunk($path, $startRow = 1, $size = 65000, $withEmptyRows = false)
     {
         return RowFilter::clearEmptyRows($this->getWorksheetPart($path, $startRow, $size)->toArray());
     }
 
-    /** {@inheirtdoc} */
+    /** {@inheritdoc} */
     public function getReadIterator($path)
     {
         return new StringifyIterator(new NestingDiscloseIterator($this->getExcel($path)->getRowIterator()));
     }
 
-    /** {@inheirtdoc} */
-    public function getRowsNumber($path, $maxCountEmptyRows = null)
+    /** {@inheritdoc} */
+    public function getRowsNumber($path, $maxCountEmptyRows = null, $withEmptyRows = false)
     {
         return $this->getExcel($path)->getHighestRow();
     }
@@ -39,6 +39,7 @@ class PhpofficeReader extends ReaderAbstract implements ReaderInterface
     /**
      * @param string $path
      * @return \PHPExcel_Worksheet
+     * @throws \PHPExcel_Reader_Exception
      */
     protected function getExcel($path)
     {
@@ -51,6 +52,7 @@ class PhpofficeReader extends ReaderAbstract implements ReaderInterface
      * @param $startRow
      * @param $size
      * @return \PHPExcel_Worksheet
+     * @throws \PHPExcel_Reader_Exception
      */
     protected function getWorksheetPart($path, $startRow, $size)
     {
@@ -58,11 +60,9 @@ class PhpofficeReader extends ReaderAbstract implements ReaderInterface
     }
 
     /**
-     * @param string $path
-     * @param \PHPExcel_Reader_IReadFilter $readFilter
      * @param $path
-     * @return \PHPExcel_Worksheet
-     * @throws \PHPExcel_Reader_Exception
+     * @param \PHPExcel_Reader_IReadFilter|null $readFilter
+     * @return mixed
      */
     protected function getWorksheet($path, \PHPExcel_Reader_IReadFilter $readFilter = null)
     {

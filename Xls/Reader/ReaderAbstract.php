@@ -7,7 +7,7 @@ abstract class ReaderAbstract implements ReaderInterface
     /** {@inheritdoc} */
     public function getHeaderRow($path)
     {
-        return $this->getRowsChunk($path, 1, 1)[0];
+        return $this->getRowsChunk($path, 1, 1, true)[0];
     }
 
     /** {@inheirtdoc} */

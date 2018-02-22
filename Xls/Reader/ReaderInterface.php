@@ -14,9 +14,10 @@ interface ReaderInterface
      * @param $path
      * @param int $startRow
      * @param int $size
+     * @param bool $withEmptyRows
      * @return array
      */
-    public function getRowsChunk($path, $startRow = 1, $size = 65000);
+    public function getRowsChunk($path, $startRow = 1, $size = 65000, $withEmptyRows = false);
 
     /**
      * @param string $path
@@ -27,9 +28,10 @@ interface ReaderInterface
     /**
      * @param string $path
      * @param int $maxCountEmptyRows
-     * @return \Iterator
+     * @param bool $withEmptyRows
+     * @return int
      */
-    public function getRowsNumber($path, $maxCountEmptyRows = null);
+    public function getRowsNumber($path, $maxCountEmptyRows = null, $withEmptyRows = false);
 
     /**
      * @param string $path
