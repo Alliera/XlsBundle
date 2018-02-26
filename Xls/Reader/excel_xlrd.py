@@ -19,51 +19,54 @@ def run(argv):
     parser.add_argument('--max-empty-rows', dest="max_empty_rows")
     parser.add_argument('--with-empty-rows')
     args = parser.parse_args()
+    with_empty_rows = args.with_empty_rows
 
-    if False == os.path.isfile(args.file):
+    if not os.path.isfile(args.file):
         print("File does not exist")
         sys.exit(1)
 
     workbook = xlrd.open_workbook(args.file)
     sheet = workbook.sheet_by_index(0)
+
     if args.action == "count":
-        if args.with_empty_rows:
-            print sheet.nrows
-            return
-        max_count_empty_rows = int(args.max_empty_rows)
-        rows_count = 0
+        max_empty_rows = int(args.max_empty_rows)
+        total_rows_count = 0
         empty_rows_count = 0
-        for rownum in range(sheet.nrows):
-            row = sheet.row_values(rownum)
-            current_row_read = []
+        for row_number in range(sheet.nrows):
+            row = sheet.row_values(row_number)
+            row_empty = True
             for cell in row:
-                value = cell
-                if value in (u'', ''):
-                    continue
-                else:
-                    current_row_read.append(True)
+                if cell not in (u'', ''):
+                    row_empty = False
                     empty_rows_count = 0
                     break
-            if not current_row_read:
+
+            if not row_empty or with_empty_rows:
+                total_rows_count += 1
+
+            if row_empty:
                 empty_rows_count += 1
-            else:
-                rows_count += 1
-            if max_count_empty_rows < empty_rows_count:
+
+            if max_empty_rows < empty_rows_count:
+                if with_empty_rows:
+                    total_rows_count = total_rows_count - empty_rows_count  # cut off trailing empty rows
                 break
-        print(rows_count)
+
+        print(total_rows_count)
 
     elif args.action == "read":
         rows = []
         num_cols = sheet.ncols
         row_process_number = 0
-        for row_idx in range(int(args.start) - 1, sheet.nrows): # Iterate through rows
+        for row_idx in range(int(args.start) - 1, sheet.nrows):  # Iterate through rows
             row_process_number += 1
             current_row_read = []
-            row_not_empty = False
+            row_empty = True
             for col_idx in range(0, num_cols):  # Iterate through columns
                 cell_obj = sheet.cell(row_idx, col_idx)  # Get cell object by row, col
                 if cell_obj.value not in (u'', ''):
-                    row_not_empty = True
+                    row_empty = False
+
                 if cell_obj.ctype == CELL_TYPE_XLDATE:
                     current_row_read.append(
                         datetime.datetime(*xlrd.xldate_as_tuple(cell_obj.value, workbook.datemode)).isoformat())
@@ -72,10 +75,12 @@ def run(argv):
                 else:
                     current_row_read.append(cell_obj.value)
 
-            if row_not_empty or args.with_empty_rows:
+            if not row_empty or with_empty_rows:
                 rows.append(current_row_read)
+
             if row_process_number >= int(args.size):
                 break
+
         print(json.dumps(rows))
 
     else:
