@@ -21,7 +21,7 @@ class PythonReader extends ReaderAbstract implements ReaderInterface
     private $pythonExecutable;
 
     /** @param string $pythonExecutable */
-    public function __construct($pythonExecutable = "python")
+    public function __construct($pythonExecutable = "python3")
     {
         $this->pythonExecutable = $pythonExecutable;
     }

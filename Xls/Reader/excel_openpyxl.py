@@ -65,8 +65,6 @@ def run(argv):
 
                 if isinstance(value, (datetime.datetime, datetime.time)):
                     current_row_read.append(value.isoformat())
-                elif isinstance(value, (str, unicode)):
-                    current_row_read.append(value.encode('utf-8'))
                 else:
                     current_row_read.append(value)
 

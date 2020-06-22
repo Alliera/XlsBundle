@@ -70,8 +70,6 @@ def run(argv):
                 if cell_obj.ctype == CELL_TYPE_XLDATE:
                     current_row_read.append(
                         datetime.datetime(*xlrd.xldate_as_tuple(cell_obj.value, workbook.datemode)).isoformat())
-                elif cell_obj.ctype == CELL_TYPE_TEXT:
-                    current_row_read.append(cell_obj.value.encode('utf-8'))
                 else:
                     current_row_read.append(cell_obj.value)
 
