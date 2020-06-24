@@ -26,10 +26,9 @@ def run(argv):
 
     if args.action == "count":
         max_empty_rows = int(args.max_empty_rows)
-        sheet.max_row = None
         total_rows_count = 0
         empty_rows_count = 0
-        for row in sheet.iter_rows(row_offset=0):
+        for row in sheet.iter_rows():
             row_empty = True
             for cell in row:
                 if cell.value is not None:
@@ -52,9 +51,8 @@ def run(argv):
 
     elif args.action == "read":
         rows = []
-        # sheet.max_row = sheet.max_column = None
         row_process_number = 0
-        for row in sheet.iter_rows(row_offset=int(args.start) - 1):
+        for row in sheet.iter_rows(min_row=int(args.start)):
             row_process_number += 1
             current_row_read = []
             row_empty = True
